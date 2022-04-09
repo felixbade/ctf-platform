@@ -1,5 +1,5 @@
 import os
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 
 from app import app
 
@@ -18,7 +18,12 @@ def check_brief(name):
     correct_flag = open(os.path.join(challenge_path, 'flag.txt')).read()
 
     if attempted_flag == correct_flag:
-        return 'Correct!'
+        return redirect(url_for('view_solved', name=name))
     else:
         return 'Incorrect!'
-    
+
+@app.route('/challenges/<name>/solved')
+def view_solved(name):
+    challenge_path = os.path.join('puzzle', 'challenges', name)
+    article = open(os.path.join(challenge_path, 'solved.md')).read()
+    return render_template('challenge-solved.html', article=article)
