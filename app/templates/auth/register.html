@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_field %}
+
+
+{% block content %}
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ render_field(form.username) }}
+        {{ render_field(form.password1) }}
+        {{ render_field(form.password2) }}
+        <input type="submit" value="Register">
+    </form>
+{% endblock %}
