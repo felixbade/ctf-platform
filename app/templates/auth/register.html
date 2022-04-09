@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
+{% from '_macros.html' import render_field %}
 
 
 {% block content %}
     <form method="POST">
         {{ form.csrf_token }}
-        <p>{{ form.username.label }}: {{ form.username }}</p>
-        <p>{{ form.password1.label }}: {{ form.password1 }}</p>
-        <p>{{ form.password2.label }}: {{ form.password2 }}</p>
+        {{ render_field(form.username) }}
+        {{ render_field(form.password1) }}
+        {{ render_field(form.password2) }}
         <input type="submit" value="Register">
     </form>
 {% endblock %}
