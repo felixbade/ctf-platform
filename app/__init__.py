@@ -14,4 +14,7 @@ migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 csrf = CSRFProtect(app)
 
+from flaskext.markdown import Markdown
+Markdown(app)
+
 from app import controllers

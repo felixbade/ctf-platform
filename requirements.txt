@@ -2,6 +2,7 @@ alembic==1.7.7
 click==8.1.2
 Flask==2.1.1
 Flask-Login==0.6.0
+Flask-Markdown==0.3
 Flask-Migrate==3.1.0
 Flask-SQLAlchemy==2.5.1
 Flask-WTF==1.0.1
@@ -10,6 +11,7 @@ importlib-metadata==4.11.3
 itsdangerous==2.1.2
 Jinja2==3.1.1
 Mako==1.2.0
+Markdown==3.3.6
 MarkupSafe==2.1.1
 python-dotenv==0.20.0
 SQLAlchemy==1.4.35
