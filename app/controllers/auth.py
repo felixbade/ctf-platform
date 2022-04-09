@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request
+from flask import render_template, redirect, flash
 from flask_login import login_user
 
 from app.models.user import User
@@ -19,5 +19,24 @@ def register():
         user.set_password(form.password1.data)
         db.session.add(user)
         db.session.commit()
+        login_user(user)
+        flash(f'Logged in as {user.username}!', 'info')
         return redirect('/')
     return render_template('auth/register.html', form=form)
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user)
+            flash(f'Logged in as {user.username}!', 'info')
+            return redirect('/')
+        else:
+            flash('Wrong username and/or password', 'error')
+            return render_template('auth/login.html', form=form)
+
+    return render_template('auth/login.html', form=form)
+

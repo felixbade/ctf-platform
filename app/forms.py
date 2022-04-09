@@ -9,3 +9,8 @@ class RegistrationForm(FlaskForm):
         EqualTo('password2', 'Passwords have to match')
         ])
     password2 = PasswordField('Password (Again)', validators=[InputRequired()])
+
+
+class LoginForm(FlaskForm):
+    username = StringField(validators=[InputRequired()])
+    password = PasswordField(validators=[InputRequired()])
