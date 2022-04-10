@@ -91,5 +91,15 @@ def add_challenge(name):
         f.write(f'{name}\n')
 
 
+def remove_challenge(name):
+    challenges = get_challenge_list()
+    challenges.remove(name)
+
+    # Keep the challenge files, just remove it from the list
+    with open(os.path.join('puzzle', 'challenges', 'order.txt'), 'w') as f:
+        for challenge in challenges:
+            f.write(challenge + '\n')
+
+
 def get_next_non_completed_challenge():
     return get_challenge_list()[0]

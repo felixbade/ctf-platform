@@ -48,3 +48,13 @@ def admin_save_new_challenge():
     name = request.form.get('name')
     add_challenge(name)
     return redirect(url_for('admin_edit_challenge', name=name))
+
+
+@app.route('/admin/remove-challenge/<name>')
+def admin_remove_challenge(name):
+    return render_template('admin/remove-challenge.html', name=name)
+
+@app.route('/admin/remove-challenge/<name>', methods=['POST'])
+def admin_save_remove_challenge(name):
+    remove_challenge(name)
+    return redirect(url_for('admin_view'))
