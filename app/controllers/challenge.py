@@ -5,17 +5,14 @@ from app import app
 
 @app.route('/challenges/<name>')
 def view_brief(name, incorrect_flag=None):
-    challenge_path = os.path.join('puzzle', 'challenges', name)
-    brief = open(os.path.join(challenge_path, 'brief.md')).read()
-    uri = open(os.path.join(challenge_path, 'uri.txt')).read()
+    brief = get_challenge_brief(name)
+    uri = get_challenge_uri(name)
     return render_template('challenge-brief.html', brief=brief, uri=uri, incorrect_flag=incorrect_flag)
 
 @app.route('/challenges/<name>', methods=['POST'])
 def check_brief(name):
     attempted_flag = request.form.get('flag')
-
-    challenge_path = os.path.join('puzzle', 'challenges', name)
-    correct_flag = open(os.path.join(challenge_path, 'flag.txt')).read()
+    correct_flag = get_challenge_flag(name)
 
     if attempted_flag == correct_flag:
         return redirect(url_for('view_solved', name=name))
@@ -24,8 +21,7 @@ def check_brief(name):
 
 @app.route('/challenges/<name>/solved')
 def view_solved(name):
-    challenge_path = os.path.join('puzzle', 'challenges', name)
-    article = open(os.path.join(challenge_path, 'solved.md')).read()
+    article = get_challenge_solved(name)
 
     challenges = get_challenge_list()
     index = challenges.index(name)
@@ -37,6 +33,23 @@ def view_solved(name):
 
 def get_challenge_list():
     return open(os.path.join('puzzle', 'challenges', 'order.txt')).read().split('\n')
+
+
+def get_challenge_file(challenge, filename):
+    return open(os.path.join('puzzle', 'challenges', challenge, filename)).read()
+
+def get_challenge_brief(name):
+    return get_challenge_file(name, 'brief.md')
+
+def get_challenge_uri(name):
+    return get_challenge_file(name, 'uri.txt')
+
+def get_challenge_solved(name):
+    return get_challenge_file(name, 'solved.md')
+
+def get_challenge_flag(name):
+    return get_challenge_file(name, 'flag.txt')
+    
 
 def get_next_non_completed_challenge():
     return get_challenge_list()[0]
