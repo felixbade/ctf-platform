@@ -4,11 +4,11 @@ from flask import render_template, request, redirect, url_for
 from app import app
 
 @app.route('/challenges/<name>')
-def view_brief(name):
+def view_brief(name, incorrect_flag=None):
     challenge_path = os.path.join('puzzle', 'challenges', name)
     brief = open(os.path.join(challenge_path, 'brief.md')).read()
     uri = open(os.path.join(challenge_path, 'uri.txt')).read()
-    return render_template('challenge-brief.html', brief=brief, uri=uri)
+    return render_template('challenge-brief.html', brief=brief, uri=uri, incorrect_flag=incorrect_flag)
 
 @app.route('/challenges/<name>', methods=['POST'])
 def check_brief(name):
@@ -20,7 +20,7 @@ def check_brief(name):
     if attempted_flag == correct_flag:
         return redirect(url_for('view_solved', name=name))
     else:
-        return 'Incorrect!'
+        return view_brief(name=name, incorrect_flag=attempted_flag)
 
 @app.route('/challenges/<name>/solved')
 def view_solved(name):
