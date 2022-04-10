@@ -28,7 +28,6 @@ def view_solved(name):
     article = open(os.path.join(challenge_path, 'solved.md')).read()
 
     challenges = get_challenge_list()
-    print(challenges)
     index = challenges.index(name)
     next_challenge = None
     if index + 1 < len(challenges):
