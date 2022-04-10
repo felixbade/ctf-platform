@@ -44,3 +44,10 @@ a:hover {
 .error {
     color: red; 
 }
+
+.footer {
+    margin: 1em 0;
+    border-top: 1px solid hsla(0, 0%, 0%, 30%);
+    font-size: 0.65em;
+    opacity: 70%;
+}
