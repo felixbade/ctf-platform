@@ -42,7 +42,7 @@ a:hover {
 }
 
 .error {
-    color: red; 
+    color: hsl(350, 100%, 45%); 
 }
 
 .footer {
