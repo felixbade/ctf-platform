@@ -6,7 +6,7 @@
 
 <div class="section">
 {% if current_user.is_authenticated %}
-first challenge
+<h2><a href="{{ url_for('view_brief', name=next_non_completed_challenge) }}">Next challenge</a></h2>
 {% else %}
 login
 {% endif %}

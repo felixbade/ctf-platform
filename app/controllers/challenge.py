@@ -39,3 +39,5 @@ def view_solved(name):
 def get_challenge_list():
     return open(os.path.join('puzzle', 'challenges', 'order.txt')).read().split('\n')
 
+def get_next_non_completed_challenge():
+    return get_challenge_list()[0]
