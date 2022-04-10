@@ -26,4 +26,16 @@ def check_brief(name):
 def view_solved(name):
     challenge_path = os.path.join('puzzle', 'challenges', name)
     article = open(os.path.join(challenge_path, 'solved.md')).read()
-    return render_template('challenge-solved.html', article=article)
+
+    challenges = get_challenge_list()
+    print(challenges)
+    index = challenges.index(name)
+    next_challenge = None
+    if index + 1 < len(challenges):
+        next_challenge = challenges[index + 1]
+
+    return render_template('challenge-solved.html', article=article, next_challenge=next_challenge)
+
+def get_challenge_list():
+    return open(os.path.join('puzzle', 'challenges', 'order.txt')).read().split('\n')
+
