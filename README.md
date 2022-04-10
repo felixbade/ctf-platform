@@ -1,7 +1,8 @@
 # ctf-platform
 
 ## Installation
-- virtual env is recommended
+- `python3 -m venv venv`
+- `. venv/bin/activate`
 - `pip install -r requirements`
 - add a secure secret key to `.env`
 
