@@ -8,3 +8,5 @@ for env_file in ('.env', '.flaskenv'):
 
 port = os.getenv('PORT')
 bind = f"0.0.0.0:{port}"
+
+accesslog = '-'
