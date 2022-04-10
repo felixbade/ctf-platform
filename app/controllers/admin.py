@@ -37,3 +37,14 @@ def admin_save_challenge(name):
     save_challenge_flag(name, form.get('flag', ''))
 
     return redirect(url_for('admin_view'))
+
+
+@app.route('/admin/new-challenge/')
+def admin_new_challenge():
+    return render_template('admin/new-challenge.html')
+
+@app.route('/admin/new-challenge/', methods=['POST'])
+def admin_save_new_challenge():
+    name = request.form.get('name')
+    add_challenge(name)
+    return redirect(url_for('admin_edit_challenge', name=name))

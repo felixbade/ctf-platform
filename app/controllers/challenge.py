@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from flask import render_template, request, redirect, url_for
 
 from app import app
@@ -32,7 +33,7 @@ def view_solved(name):
     return render_template('challenge-solved.html', article=article, next_challenge=next_challenge)
 
 def get_challenge_list():
-    return open(os.path.join('puzzle', 'challenges', 'order.txt')).read().split('\n')
+    return open(os.path.join('puzzle', 'challenges', 'order.txt')).read().strip().split('\n')
 
 
 def get_challenge_file(challenge, filename):
@@ -66,6 +67,28 @@ def save_challenge_uri(name, uri):
 
 def save_challenge_flag(name, flag):
     save_challenge_file(name, 'flag.txt', flag)
+
+
+def add_challenge(name):
+    # Might be better off in a database. We could add folder import/export to support the old system.
+    # Stuff like multipe challenges with the same name, empty names, slashes in names, and missing
+    # line breaks can cause problems.
+    if name in get_challenge_list():
+        return
+    if not name:
+        return
+    
+    challenge_folder = os.path.join('puzzle', 'challenges', name)
+    try:
+        Path(challenge_folder).mkdir()
+        Path(os.path.join(challenge_folder, 'brief.md')).touch()
+        Path(os.path.join(challenge_folder, 'solved.md')).touch()
+        Path(os.path.join(challenge_folder, 'uri.txt')).touch()
+        Path(os.path.join(challenge_folder, 'flag.txt')).touch()
+    except FileExistsError:
+        pass
+    with open(os.path.join('puzzle', 'challenges', 'order.txt'), 'a') as f:
+        f.write(f'{name}\n')
 
 
 def get_next_non_completed_challenge():
