@@ -1,8 +1,8 @@
-from flask import render_template, abort
+from flask import render_template, abort, request
 from flask_login import login_required, current_user
 
 from app import app
-from app.controllers.challenge import get_challenge_list
+from app.controllers.challenge import *
 
 def is_current_user_admin():
     # A quick and dirty implementation.
@@ -15,4 +15,25 @@ def is_current_user_admin():
 def admin_view():
     if not is_current_user_admin():
         abort(403)
-    return render_template('admin.html', challenges=get_challenge_list())
+    return render_template('admin/list-challenges.html', challenges=get_challenge_list())
+
+@app.route('/admin/edit-challenge/<name>')
+def admin_edit_challenge(name):
+    return render_template('admin/edit-challenge.html',
+            name=name,
+            brief=get_challenge_brief(name),
+            uri=get_challenge_uri(name),
+            flag=get_challenge_flag(name),
+            solved=get_challenge_solved(name)
+    )
+
+
+@app.route('/admin/edit-challenge/<name>', methods=['POST'])
+def admin_save_challenge(name):
+    form = request.form
+    save_challenge_brief(name, form.get('brief', '').replace('\r\n', '\n'))
+    save_challenge_solved(name, form.get('solved', '').replace('\r\n', '\n'))
+    save_challenge_uri(name, form.get('uri', ''))
+    save_challenge_flag(name, form.get('flag', ''))
+
+    return redirect(url_for('admin_view'))

@@ -51,5 +51,22 @@ def get_challenge_flag(name):
     return get_challenge_file(name, 'flag.txt')
     
 
+def save_challenge_file(challenge, filename, content):
+    with open(os.path.join('puzzle', 'challenges', challenge, filename), 'w') as f:
+        f.write(content)
+
+def save_challenge_brief(name, brief):
+    save_challenge_file(name, 'brief.md', brief)
+
+def save_challenge_solved(name, solved):
+    save_challenge_file(name, 'solved.md', solved)
+
+def save_challenge_uri(name, uri):
+    save_challenge_file(name, 'uri.txt', uri)
+
+def save_challenge_flag(name, flag):
+    save_challenge_file(name, 'flag.txt', flag)
+
+
 def get_next_non_completed_challenge():
     return get_challenge_list()[0]
