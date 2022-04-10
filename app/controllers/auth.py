@@ -20,7 +20,6 @@ def register():
         db.session.add(user)
         db.session.commit()
         login_user(user)
-        flash(f'Logged in as {user.username}!', 'info')
         return redirect('/')
     return render_template('auth/register.html', form=form)
 
@@ -32,7 +31,6 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.check_password(form.password.data):
             login_user(user)
-            flash(f'Logged in as {user.username}!', 'info')
             return redirect('/')
         else:
             flash('Wrong username and/or password', 'error')
