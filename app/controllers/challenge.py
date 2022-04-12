@@ -85,8 +85,8 @@ def view_solved(name):
     return render_template('challenge-solved.html', article=article, next_challenge=next_challenge)
 
 def get_challenge_list():
-    return open(os.path.join('puzzle', 'challenges', 'order.txt')).read().strip().split('\n')
-
+    challenges = Challenge.query.order_by(Challenge.order_num).all()
+    return [c.title for c in challenges]
 
 def get_challenge_file(challenge, filename):
     return open(os.path.join('puzzle', 'challenges', challenge, filename)).read()
