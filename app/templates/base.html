@@ -9,7 +9,9 @@
     </head>
     <body>
         <div class="container">
-        {{ current_user.username }}
+        {% if current_user.is_authenticated %}
+            Logged in as {{ current_user.username }} (<a href="{{ url_for('logout')}}">logout</a>)
+        {% endif %}
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -24,6 +26,9 @@
         {% block content %}
             hello
         {% endblock %}
+            <div class="footer">                
+                <a href="https://github.com/felixbade/ctf-platform">Source code</a>      
+            </div>
         </div>
     </body>
 </html>
