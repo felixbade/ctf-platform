@@ -1,23 +1,37 @@
-from flask import render_template, abort, request
-from flask_login import login_required, current_user
+from flask import abort
+from flask_login import current_user
+from functools import wraps
 
-from app import app
+from app import login_manager
 from app.controllers.challenge import *
+
 
 def is_current_user_admin():
     # A quick and dirty implementation.
     # 'admin' user should be registered by organizers before a player does.
     # The logic should probably be moved to controllers/auth.py or models/user.py.
-    return current_user.username == 'admin'
+    return current_user.is_authenticated and current_user.username == 'admin'
+
+
+def admin_required(func):
+    """Decorator for checking that the user is an admin"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not is_current_user_admin():
+            return login_manager.unauthorized()
+        return func(*args, **kwargs)
+
+    return wrapper
+
 
 @app.route('/admin')
-@login_required
+@admin_required
 def admin_view():
-    if not is_current_user_admin():
-        abort(403)
     return render_template('admin/list-challenges.html', challenges=get_challenge_list())
 
+
 @app.route('/admin/edit-challenge/<name>')
+@admin_required
 def admin_edit_challenge(name):
     return render_template('admin/edit-challenge.html',
             name=name,
@@ -29,6 +43,7 @@ def admin_edit_challenge(name):
 
 
 @app.route('/admin/edit-challenge/<name>', methods=['POST'])
+@admin_required
 def admin_save_challenge(name):
     form = request.form
     save_challenge_brief(name, form.get('brief', '').replace('\r\n', '\n'))
@@ -40,10 +55,13 @@ def admin_save_challenge(name):
 
 
 @app.route('/admin/new-challenge/')
+@admin_required
 def admin_new_challenge():
     return render_template('admin/new-challenge.html')
 
+
 @app.route('/admin/new-challenge/', methods=['POST'])
+@admin_required
 def admin_save_new_challenge():
     name = request.form.get('name')
     add_challenge(name)
@@ -51,10 +69,13 @@ def admin_save_new_challenge():
 
 
 @app.route('/admin/remove-challenge/<name>')
+@admin_required
 def admin_remove_challenge(name):
     return render_template('admin/remove-challenge.html', name=name)
 
+
 @app.route('/admin/remove-challenge/<name>', methods=['POST'])
+@admin_required
 def admin_save_remove_challenge(name):
     remove_challenge(name)
     return redirect(url_for('admin_view'))
