@@ -49,15 +49,14 @@ def challenge_access_required(func):
 
 @app.route('/challenges/<name>')
 @challenge_access_required
-def view_brief(name, incorrect_flag=None, already_solved=False):
+def view_brief(name, incorrect_flag=None):
     brief = get_challenge_brief(name)
     uri = get_challenge_uri(name)
     return render_template(
         'challenge-brief.html',
         brief=brief,
         uri=uri,
-        incorrect_flag=incorrect_flag,
-        already_solved=already_solved
+        incorrect_flag=incorrect_flag
     )
 
 
@@ -73,7 +72,6 @@ def check_brief(name):
             create_user_solution(current_user, challenge)
         except IntegrityError:
             db.session.rollback()
-            return view_brief(name=name, already_solved=True)
         return redirect(url_for('view_solved', name=name))
     else:
         return view_brief(name=name, incorrect_flag=attempted_flag)
