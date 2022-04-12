@@ -16,6 +16,7 @@ def create_user_solution(user, challenge):
 
 class UserSolution(db.Model):
     __tablename__ = 'user_solution'
+    __table_args__ = (db.UniqueConstraint('user_id', 'challenge_id'), )
 
     id = db.Column(db.Integer, primary_key=True)
     challenge_id = db.Column(db.Integer, db.ForeignKey('challenge.id'), nullable=False)

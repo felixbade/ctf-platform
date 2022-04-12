@@ -1,8 +1,8 @@
-"""Add UserSolutionModel
+"""Add unique together constraint to prevent users from submitting multiple solutions to one challenge
 
-Revision ID: fb674a7c7048
+Revision ID: a8186b88cc2f
 Revises: a72e034fa11d
-Create Date: 2022-04-12 11:26:14.389204
+Create Date: 2022-04-12 16:46:24.369959
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fb674a7c7048'
+revision = 'a8186b88cc2f'
 down_revision = 'a72e034fa11d'
 branch_labels = None
 depends_on = None
@@ -25,7 +25,8 @@ def upgrade():
     sa.Column('solved_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['challenge_id'], ['challenge.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id', 'challenge_id')
     )
     # ### end Alembic commands ###
 
