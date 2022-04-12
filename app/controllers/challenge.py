@@ -145,4 +145,12 @@ def remove_challenge(name):
 
 
 def get_next_non_completed_challenge():
-    return get_challenge_list()[0]
+    if current_user.is_authenticated:
+        latest_solution = current_user.latest_solution
+        if not latest_solution:
+            return Challenge.query.order_by(Challenge.order_num).first()
+        else:
+            challenge_num = latest_solution.challenge.order_num
+            return Challenge.query.filter(Challenge.order_num <= challenge_num + 1).order_by(-Challenge.order_num).first()
+    else:
+        return None
