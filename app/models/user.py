@@ -25,7 +25,13 @@ class User(UserMixin, db.Model):
 
     @property
     def latest_solution_time(self):
-        return UserSolution.query.filter(UserSolution.user_id == self.id).order_by(UserSolution.solved_at).first()
+        latest_solution = UserSolution.query.filter(
+            UserSolution.user_id == self.id
+        ).order_by(UserSolution.solved_at).first()
+        if latest_solution:
+            return latest_solution.solved_at
+        else:
+            return None
 
     def __repr__(self) -> str:
         return f"<User {self.username}>"

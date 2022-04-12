@@ -23,4 +23,4 @@ class UserSolution(db.Model):
     solved_at = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-        f"<UserSolution id: {self.id}>"
+        return f"<UserSolution id: {self.id}>"
