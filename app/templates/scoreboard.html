@@ -4,6 +4,7 @@
     <table>
         <thead>
             <tr>
+                <th>Pos.</th>
                 <th>User</th>
                 <th>Score</th>
                 <th>Latest Solution</th>
@@ -12,6 +13,7 @@
         <tbody>
             {% for user in users %}
                 <tr>
+                    <th>{{ loop.index }}</th>
                     <td>{{ user.username }}</td>
                     <td>{{ user.num_of_solutions }}</td>
                     <td>{{ user.latest_solution_time }}</td>
