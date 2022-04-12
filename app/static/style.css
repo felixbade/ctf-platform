@@ -51,6 +51,31 @@ textarea {
     height: 15em;
 }
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+}
+
+thead th {
+    background-color: hsl(0, 0%, 0%);
+    color: white;
+    border-bottom: 1px solid hsla(0, 0%, 0%, 20%);
+    padding-top: 0.4em;
+}
+
+tr {
+    border-bottom: 1px solid hsla(0, 0%, 0%, 20%);
+}
+
+td, th {
+    padding: 0.3em 0.6em;
+}
+
+th {
+    text-align: left;
+}
+
 .footer {
     margin: 1em 0;
     border-top: 1px solid hsla(0, 0%, 0%, 30%);
