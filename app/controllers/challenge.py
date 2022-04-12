@@ -139,8 +139,6 @@ def add_challenge(name):
         Path(os.path.join(challenge_folder, 'flag.txt')).touch()
     except FileExistsError:
         pass
-    with open(os.path.join('puzzle', 'challenges', 'order.txt'), 'a') as f:
-        f.write(f'{name}\n')
 
     last_challenge = Challenge.query.order_by(-Challenge.order_num).first()
     order_num = last_challenge.order_num + 1 if last_challenge else 0
@@ -151,13 +149,7 @@ def add_challenge(name):
 
 
 def remove_challenge(name):
-    challenges = get_challenge_list()
-    challenges.remove(name)
-
     # Keep the challenge files, just remove it from the list
-    with open(os.path.join('puzzle', 'challenges', 'order.txt'), 'w') as f:
-        for challenge in challenges:
-            f.write(challenge + '\n')
     Challenge.query.filter(Challenge.title == name).delete()
     db.session.commit()
 
