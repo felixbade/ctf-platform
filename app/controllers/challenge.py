@@ -142,6 +142,13 @@ def add_challenge(name):
     with open(os.path.join('puzzle', 'challenges', 'order.txt'), 'a') as f:
         f.write(f'{name}\n')
 
+    last_challenge = Challenge.query.order_by(-Challenge.order_num).first()
+    order_num = last_challenge.order_num + 1 if last_challenge else 0
+
+    challenge = Challenge(title=name, order_num=order_num)
+    db.session.add(challenge)
+    db.session.commit()
+
 
 def remove_challenge(name):
     challenges = get_challenge_list()
@@ -151,6 +158,8 @@ def remove_challenge(name):
     with open(os.path.join('puzzle', 'challenges', 'order.txt'), 'w') as f:
         for challenge in challenges:
             f.write(challenge + '\n')
+    Challenge.query.filter(Challenge.title == name).delete()
+    db.session.commit()
 
 
 def get_next_non_completed_challenge():

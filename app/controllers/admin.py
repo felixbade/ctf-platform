@@ -67,12 +67,6 @@ def admin_new_challenge():
 @admin_required
 def admin_save_new_challenge():
     name = request.form.get('name')
-    last_challenge = Challenge.query.order_by(-Challenge.order_num).first()
-    order_num = last_challenge.order_num + 1 if last_challenge else 0
-
-    challenge = Challenge(title=name, order_num=order_num)
-    db.session.add(challenge)
-    db.session.commit()
     add_challenge(name)
     return redirect(url_for('admin_edit_challenge', name=name))
 
@@ -86,7 +80,5 @@ def admin_remove_challenge(name):
 @app.route('/admin/remove-challenge/<name>', methods=['POST'])
 @admin_required
 def admin_save_remove_challenge(name):
-    Challenge.query.filter(Challenge.title == name).delete()
-    db.session.commit()
     remove_challenge(name)
     return redirect(url_for('admin_view'))
