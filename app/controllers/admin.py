@@ -1,8 +1,10 @@
 from functools import wraps
 
-from app import login_manager, db
-from app.controllers.challenge import *
-from app.models.challenge import Challenge
+from flask import render_template, request, redirect, url_for
+from flask_login import current_user
+
+from app import app, login_manager, db
+from app.models.challenge import *
 
 
 def is_current_user_admin():
