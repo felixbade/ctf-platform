@@ -1,10 +1,11 @@
 import os
 from pathlib import Path
+from sqlalchemy.exc import IntegrityError
 from flask import render_template, request, redirect, url_for, abort
-from flask_login import login_required, current_user
+from flask_login import current_user
 from functools import wraps
 
-from app import app, login_manager
+from app import app, login_manager, db
 from app.models.challenge import Challenge
 from app.models.user_solution import create_user_solution
 
@@ -48,10 +49,16 @@ def challenge_access_required(func):
 
 @app.route('/challenges/<name>')
 @challenge_access_required
-def view_brief(name, incorrect_flag=None):
+def view_brief(name, incorrect_flag=None, already_solved=False):
     brief = get_challenge_brief(name)
     uri = get_challenge_uri(name)
-    return render_template('challenge-brief.html', brief=brief, uri=uri, incorrect_flag=incorrect_flag)
+    return render_template(
+        'challenge-brief.html',
+        brief=brief,
+        uri=uri,
+        incorrect_flag=incorrect_flag,
+        already_solved=already_solved
+    )
 
 
 @app.route('/challenges/<name>', methods=['POST'])
@@ -62,7 +69,11 @@ def check_brief(name):
 
     if attempted_flag == correct_flag:
         challenge = Challenge.query.filter(Challenge.title == name).first()
-        create_user_solution(current_user, challenge)
+        try:
+            create_user_solution(current_user, challenge)
+        except IntegrityError:
+            db.session.rollback()
+            return view_brief(name=name, already_solved=True)
         return redirect(url_for('view_solved', name=name))
     else:
         return view_brief(name=name, incorrect_flag=attempted_flag)

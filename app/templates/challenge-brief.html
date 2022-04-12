@@ -17,6 +17,9 @@
     <h2>Check the flag</h2>
     <form method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        {% if already_solved %}
+            <p class="error">You already answered this challenge</p>
+        {% endif %}
         {% if incorrect_flag %}
         <input type="text" name="flag" value="{{ incorrect_flag }}">
         <button>Check</button>
