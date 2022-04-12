@@ -25,7 +25,7 @@ def challenge_access_required(func):
         if not challenge_title:
             # this should only happen when the controller has not been setup
             # correctly
-            return abort(500)
+            abort(500)
 
         # Get the order number for the last challenge the user solved
         latest_user_solution = current_user.latest_solution
@@ -41,7 +41,7 @@ def challenge_access_required(func):
 
         if not challenge_accessed:
             # This will be returned if the queries did not return any Challenges
-            return login_manager.unauthorized()
+            abort(403)
 
         return func(*args, **kwargs)
 
