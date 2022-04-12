@@ -60,7 +60,9 @@ def admin_save_challenge(name):
 @app.route('/admin/new-challenge/')
 @admin_required
 def admin_new_challenge():
-    return render_template('admin/new-challenge.html')
+    last_challenge = Challenge.query.order_by(-Challenge.order_num).first()
+    initial_order_num = last_challenge.order_num + 1 if last_challenge else 0
+    return render_template('admin/new-challenge.html', initial_order_num=initial_order_num)
 
 
 @app.route('/admin/new-challenge/', methods=['POST'])
