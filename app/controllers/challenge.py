@@ -1,21 +1,30 @@
 import os
 from pathlib import Path
 from flask import render_template, request, redirect, url_for
+from flask_login import login_required, current_user
 
 from app import app
+from app.models.challenge import Challenge
+from app.models.user_solution import create_user_solution
+
 
 @app.route('/challenges/<name>')
+@login_required
 def view_brief(name, incorrect_flag=None):
     brief = get_challenge_brief(name)
     uri = get_challenge_uri(name)
     return render_template('challenge-brief.html', brief=brief, uri=uri, incorrect_flag=incorrect_flag)
 
+
 @app.route('/challenges/<name>', methods=['POST'])
+@login_required
 def check_brief(name):
     attempted_flag = request.form.get('flag')
     correct_flag = get_challenge_flag(name)
 
     if attempted_flag == correct_flag:
+        challenge = Challenge.query.filter(Challenge.title == name).first()
+        create_user_solution(current_user, challenge)
         return redirect(url_for('view_solved', name=name))
     else:
         return view_brief(name=name, incorrect_flag=attempted_flag)
