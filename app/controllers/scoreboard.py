@@ -7,6 +7,6 @@ from app.models.user import User
 @app.route('/scoreboard')
 def scoreboard():
     users = User.query.all()
-    users.sort(key=lambda x: (x.num_of_solutions, x.latest_solution_time))
+    users.sort(key=lambda x: (-x.num_of_solutions, x.latest_solution_time))
 
     return render_template('scoreboard.html', users=users)

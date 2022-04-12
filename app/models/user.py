@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import desc
 
 from app import db
 from app.models.user_solution import UserSolution
@@ -24,8 +25,16 @@ class User(UserMixin, db.Model):
         return len(self.solutions)
 
     @property
+    def latest_solution(self):
+        return UserSolution.query.filter(UserSolution.user_id == self.id).order_by(desc(UserSolution.solved_at)).first()
+
+    @property
     def latest_solution_time(self):
-        return UserSolution.query.filter(UserSolution.user_id == self.id).order_by(UserSolution.solved_at).first()
+        latest_solution = self.latest_solution
+        if latest_solution:
+            return latest_solution.solved_at
+        else:
+            return None
 
     def __repr__(self) -> str:
         return f"<User {self.username}>"

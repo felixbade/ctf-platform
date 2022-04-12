@@ -7,6 +7,9 @@
 <form method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 
+    <h2>Order Number</h2>
+    <input type="number" name="order_num" value="{{ challenge_obj.order_num }}">
+
     <h2>Brief.md</h2>
     <textarea name="brief">{{ brief }}</textarea>
 

@@ -1,35 +1,87 @@
 import os
 from pathlib import Path
-from flask import render_template, request, redirect, url_for
+from sqlalchemy.exc import IntegrityError
+from flask import render_template, request, redirect, url_for, abort
+from flask_login import current_user
+from functools import wraps
 
-from app import app
+from app import app, login_manager, db
+from app.models.challenge import Challenge
+from app.models.user_solution import create_user_solution
+
+
+def challenge_access_required(func):
+    """
+    Decorator for checking if a user has access to a specific challenge
+
+    This decorator expects that the challenge title is passed in a keyword argument
+    called `name`
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return login_manager.unauthorized()
+        challenge_title = kwargs['name']
+        if not challenge_title:
+            # this should only happen when the controller has not been setup
+            # correctly
+            return abort(500)
+
+        # Get the order number for the last challenge the user solved
+        latest_user_solution = current_user.latest_solution
+        if not latest_user_solution:
+            challenge_accessed = Challenge.query.filter(
+                (Challenge.order_num == 0) & (Challenge.title == challenge_title)
+            ).first()
+        else:
+            challenge_num = latest_user_solution.challenge.order_num
+            challenge_accessed = Challenge.query.filter(
+                (Challenge.order_num <= challenge_num + 1) & (Challenge.title == challenge_title)
+            ).first()
+
+        if not challenge_accessed:
+            # This will be returned if the queries did not return any Challenges
+            return login_manager.unauthorized()
+
+        return func(*args, **kwargs)
+
+    return wrapper
 
 @app.route('/challenges/<name>')
+@challenge_access_required
 def view_brief(name, incorrect_flag=None):
     brief = get_challenge_brief(name)
     uri = get_challenge_uri(name)
-    return render_template('challenge-brief.html', brief=brief, uri=uri, incorrect_flag=incorrect_flag)
+    return render_template(
+        'challenge-brief.html',
+        brief=brief,
+        uri=uri,
+        incorrect_flag=incorrect_flag
+    )
+
 
 @app.route('/challenges/<name>', methods=['POST'])
+@challenge_access_required
 def check_brief(name):
     attempted_flag = request.form.get('flag')
     correct_flag = get_challenge_flag(name)
 
     if attempted_flag == correct_flag:
+        challenge = Challenge.query.filter(Challenge.title == name).first()
+        try:
+            create_user_solution(current_user, challenge)
+        except IntegrityError:
+            db.session.rollback()
         return redirect(url_for('view_solved', name=name))
     else:
         return view_brief(name=name, incorrect_flag=attempted_flag)
 
 @app.route('/challenges/<name>/solved')
+@challenge_access_required
 def view_solved(name):
+    challenge = Challenge.query.filter(Challenge.title == name).first()
+    next_challenge = Challenge.query.filter(Challenge.order_num == challenge.order_num + 1).first()
     article = get_challenge_solved(name)
-
-    challenges = get_challenge_list()
-    index = challenges.index(name)
-    next_challenge = None
-    if index + 1 < len(challenges):
-        next_challenge = challenges[index + 1]
-
     return render_template('challenge-solved.html', article=article, next_challenge=next_challenge)
 
 def get_challenge_list():
@@ -102,4 +154,12 @@ def remove_challenge(name):
 
 
 def get_next_non_completed_challenge():
-    return get_challenge_list()[0]
+    if current_user.is_authenticated:
+        latest_solution = current_user.latest_solution
+        if not latest_solution:
+            return Challenge.query.order_by(Challenge.order_num).first()
+        else:
+            challenge_num = latest_solution.challenge.order_num
+            return Challenge.query.filter(Challenge.order_num <= challenge_num + 1).order_by(-Challenge.order_num).first()
+    else:
+        return None
