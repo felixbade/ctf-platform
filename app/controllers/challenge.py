@@ -14,15 +14,15 @@ def challenge_access_required(func):
     """
     Decorator for checking if a user has access to a specific challenge
 
-    This decorator expects that the challenge title is passed in a keyword argument
+    This decorator expects that the challenge name is passed in a keyword argument
     called `name`
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not current_user.is_authenticated:
             return login_manager.unauthorized()
-        challenge_title = kwargs['name']
-        if not challenge_title:
+        challenge_name = kwargs['name']
+        if not challenge_name:
             # this should only happen when the controller has not been setup
             # correctly
             abort(500)
@@ -31,12 +31,12 @@ def challenge_access_required(func):
         latest_user_solution = current_user.latest_solution
         if not latest_user_solution:
             challenge_accessed = Challenge.query.filter(
-                (Challenge.order_num == 0) & (Challenge.title == challenge_title)
+                (Challenge.order_num == 0) & (Challenge.name == challenge_name)
             ).first()
         else:
             challenge_num = latest_user_solution.challenge.order_num
             challenge_accessed = Challenge.query.filter(
-                (Challenge.order_num <= challenge_num + 1) & (Challenge.title == challenge_title)
+                (Challenge.order_num <= challenge_num + 1) & (Challenge.name == challenge_name)
             ).first()
 
         if not challenge_accessed:
@@ -67,7 +67,7 @@ def check_brief(name):
     correct_flag = get_challenge_flag(name)
 
     if attempted_flag == correct_flag:
-        challenge = Challenge.query.filter(Challenge.title == name).first()
+        challenge = Challenge.query.filter(Challenge.name == name).first()
         try:
             create_user_solution(current_user, challenge)
         except IntegrityError:
@@ -79,14 +79,14 @@ def check_brief(name):
 @app.route('/challenges/<name>/solved')
 @challenge_access_required
 def view_solved(name):
-    challenge = Challenge.query.filter(Challenge.title == name).first()
+    challenge = Challenge.query.filter(Challenge.name == name).first()
     next_challenge = Challenge.query.filter(Challenge.order_num == challenge.order_num + 1).first()
     article = get_challenge_solved(name)
     return render_template('challenge-solved.html', article=article, next_challenge=next_challenge)
 
 def get_challenge_list():
     challenges = Challenge.query.order_by(Challenge.order_num).all()
-    return [c.title for c in challenges]
+    return [c.name for c in challenges]
 
 def get_challenge_file(challenge, filename):
     return open(os.path.join('puzzle', 'challenges', challenge, filename)).read()
@@ -143,14 +143,14 @@ def add_challenge(name):
     last_challenge = Challenge.query.order_by(-Challenge.order_num).first()
     order_num = last_challenge.order_num + 1 if last_challenge else 0
 
-    challenge = Challenge(title=name, order_num=order_num)
+    challenge = Challenge(name=name, order_num=order_num)
     db.session.add(challenge)
     db.session.commit()
 
 
 def remove_challenge(name):
     # Keep the challenge files, just remove it from the list
-    Challenge.query.filter(Challenge.title == name).delete()
+    Challenge.query.filter(Challenge.name == name).delete()
     db.session.commit()
 
 

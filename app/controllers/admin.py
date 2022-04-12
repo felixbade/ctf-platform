@@ -38,7 +38,7 @@ def admin_edit_challenge(name):
             uri=get_challenge_uri(name),
             flag=get_challenge_flag(name),
             solved=get_challenge_solved(name),
-            challenge_obj=Challenge.query.filter(Challenge.title == name).first()
+            challenge_obj=Challenge.query.filter(Challenge.name == name).first()
     )
 
 
@@ -46,7 +46,7 @@ def admin_edit_challenge(name):
 @admin_required
 def admin_save_challenge(name):
     form = request.form
-    challenge_obj = Challenge.query.filter(Challenge.title == name).first()
+    challenge_obj = Challenge.query.filter(Challenge.name == name).first()
     challenge_obj.order_num = form.get('order_num', 0)
     db.session.commit()
     save_challenge_brief(name, form.get('brief', '').replace('\r\n', '\n'))
