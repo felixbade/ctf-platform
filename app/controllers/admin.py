@@ -60,16 +60,15 @@ def admin_save_challenge(name):
 @app.route('/admin/new-challenge/')
 @admin_required
 def admin_new_challenge():
-    last_challenge = Challenge.query.order_by(-Challenge.order_num).first()
-    initial_order_num = last_challenge.order_num + 1 if last_challenge else 0
-    return render_template('admin/new-challenge.html', initial_order_num=initial_order_num)
+    return render_template('admin/new-challenge.html')
 
 
 @app.route('/admin/new-challenge/', methods=['POST'])
 @admin_required
 def admin_save_new_challenge():
     name = request.form.get('name')
-    order_num = request.form.get('order_num')
+    last_challenge = Challenge.query.order_by(-Challenge.order_num).first()
+    order_num = last_challenge.order_num + 1 if last_challenge else 0
 
     challenge = Challenge(title=name, order_num=order_num)
     db.session.add(challenge)
