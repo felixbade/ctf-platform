@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>New challenge</h1>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+    <h2>Name (for URL)</h2>
+    <input type="text" name="name" value="{{ name }}">
+
+    <br><br>
+    <input type="submit" value="Add">
+</form>
+
+{% endblock %}

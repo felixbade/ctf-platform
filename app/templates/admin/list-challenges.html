@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>All challenges</h1>
+<ul>
+    {% for challenge in challenges %}
+    <li><a href="{{ url_for('view_brief', name=challenge) }}">{{ challenge }}</a>
+        (<a href="{{ url_for('admin_edit_challenge', name=challenge) }}">edit</a>)
+        (<a href="{{ url_for('admin_remove_challenge', name=challenge) }}">remove</a>)</li>
+    {% endfor %}
+</ul>
+
+<a href="{{ url_for('admin_new_challenge') }}">New challenge</a>
+
+{% endblock %}

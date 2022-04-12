@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Are you sure you want to remove <code>{{ name }}</code>?</h1>
+
+<p>The challenge files will not be deleted, so if you create a new challenge with the same name, you will get the challenge back.</p>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+    <input type="submit" value="Remove {{ name }}">
+</form>
+
+{% endblock %}
