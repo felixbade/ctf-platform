@@ -19,3 +19,4 @@ Markdown(app)
 
 from app import controllers
 from app import cli_commands
+from app import templatetags

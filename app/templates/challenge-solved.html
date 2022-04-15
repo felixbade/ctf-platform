@@ -32,7 +32,7 @@
         {% for solution in user_solutions %}
             <tr>
                 <td>{{ solution.user.username }}</td>
-                <td>{{ solution.solved_at }}</td>
+                <td>{{ solution.solved_at | humanize_time }}</td>
             </tr>
         {% endfor %}
     </table>
