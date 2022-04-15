@@ -1,4 +1,5 @@
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import asc
 from flask import render_template, request, redirect, url_for, abort
 from flask_login import current_user
 from functools import wraps
@@ -6,7 +7,7 @@ from functools import wraps
 from app import app, login_manager, db
 from app.forms import UserFeedbackForm
 from app.models.challenge import *
-from app.models.user_solution import create_user_solution
+from app.models.user_solution import *
 from app.models.user_feedback import create_user_feedback
 
 
@@ -85,6 +86,9 @@ def check_brief(name):
 @challenge_access_required
 def view_solved(name):
     challenge = Challenge.query.filter(Challenge.name == name).first()
+    user_solutions = UserSolution.query.filter(
+        UserSolution.challenge_id == challenge.id
+    ).order_by(asc(UserSolution.solved_at)).all()
     next_challenge = Challenge.query.filter(Challenge.order_num == challenge.order_num + 1).first()
     article = get_challenge_solved(name)
 
@@ -98,7 +102,8 @@ def view_solved(name):
         article=article,
         next_challenge=next_challenge,
         form=form,
-        feedback_sent=feedback_sent
+        feedback_sent=feedback_sent,
+        user_solutions=user_solutions
     )
 
 
