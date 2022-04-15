@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False, unique=True)
     pwd_hash = db.Column(db.String(150), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
     solutions = db.relationship('UserSolution', backref='user', lazy=True)
     
     def set_password(self, password):
