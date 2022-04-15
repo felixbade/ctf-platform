@@ -6,20 +6,14 @@ from flask_login import current_user
 from app import app, login_manager
 from app.models.challenge import *
 from app.models.user_feedback import UserFeedback
-
-
-def is_current_user_admin():
-    # A quick and dirty implementation.
-    # 'admin' user should be registered by organizers before a player does.
-    # The logic should probably be moved to controllers/auth.py or models/user.py.
-    return current_user.is_admin
+from app.models.puzzle import get_welcome, save_welcome
 
 
 def admin_required(func):
     """Decorator for checking that the user is an admin"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if not is_current_user_admin():
+        if not current_user.is_admin:
             return login_manager.unauthorized()
         return func(*args, **kwargs)
 
@@ -29,7 +23,7 @@ def admin_required(func):
 @app.route('/admin')
 @admin_required
 def admin_view():
-    return render_template('admin/list-challenges.html', challenges=get_challenge_list())
+    return render_template('admin/main.html', challenges=get_challenge_list())
 
 
 @app.route('/admin/edit-challenge/<name>')
@@ -95,3 +89,17 @@ def admin_challenge_feedback(name):
         abort(404)
     user_feedback = UserFeedback.query.filter(UserFeedback.challenge_id == challenge_obj.id).all()
     return render_template('admin/user-feedback.html', user_feedback=user_feedback, challenge_obj=challenge_obj)
+
+
+@app.route('/admin/edit-welcome')
+@admin_required
+def admin_edit_welcome():
+    welcome = get_welcome()
+    return render_template('admin/edit-welcome.html', welcome=welcome)
+
+@app.route('/admin/edit-welcome', methods=['POST'])
+@admin_required
+def admin_save_welcome():
+    form = request.form
+    save_welcome(form.get('welcome', '').replace('\r\n', '\n'))
+    return redirect(url_for('admin_view'))

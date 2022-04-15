@@ -21,6 +21,10 @@ def challenge_access_required(func):
     def wrapper(*args, **kwargs):
         if not current_user.is_authenticated:
             return login_manager.unauthorized()
+    
+        if current_user.is_admin:
+            return func(*args, **kwargs)
+
         challenge_name = kwargs['name']
         if not challenge_name:
             # this should only happen when the controller has not been setup
@@ -66,7 +70,7 @@ def check_brief(name):
     attempted_flag = request.form.get('flag')
     correct_flag = get_challenge_flag(name)
 
-    if attempted_flag == correct_flag:
+    if attempted_flag in correct_flag.split(','):
         challenge = Challenge.query.filter(Challenge.name == name).first()
         try:
             create_user_solution(current_user, challenge)

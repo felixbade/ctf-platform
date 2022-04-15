@@ -9,27 +9,30 @@
     </head>
     <body>
         <div class="container">
-        {% if current_user.is_authenticated %}
-            Logged in as {{ current_user.username }}
-            (<a href="{{ url_for('logout')}}">logout</a>)
-            {% if is_current_user_admin() %}
-            (<a href="{{ url_for('admin_view')}}">admin panel</a>)
+            <header>
+            {% if current_user.is_authenticated %}
+                Logged in as {{ current_user.username }}
+                (<a href="{{ url_for('logout')}}">logout</a>)
+                {% if current_user.is_admin %}
+                (<a href="{{ url_for('admin_view')}}">admin panel</a>)
+                {% endif %}
             {% endif %}
-        {% endif %}
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    {% if category == 'error' %}
-                        <p class="error">{{ message }}</p>
-                    {% else %}
-                        <p>{{ message }}</p>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        {% block content %}
-            hello
-        {% endblock %}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'error' %}
+                            <p class="error">{{ message }}</p>
+                        {% else %}
+                            <p>{{ message }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            </header>
+    
+            {% block content %}
+                hello
+            {% endblock %}
             <div class="footer">                
                 <a href="https://github.com/felixbade/ctf-platform">Source code</a>      
             </div>
