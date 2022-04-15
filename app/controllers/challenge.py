@@ -19,6 +19,10 @@ def challenge_access_required(func):
     def wrapper(*args, **kwargs):
         if not current_user.is_authenticated:
             return login_manager.unauthorized()
+    
+        if current_user.is_admin:
+            return func(*args, **kwargs)
+
         challenge_name = kwargs['name']
         if not challenge_name:
             # this should only happen when the controller has not been setup
