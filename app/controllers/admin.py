@@ -13,7 +13,7 @@ def admin_required(func):
     """Decorator for checking that the user is an admin"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if not current_user.is_admin:
+        if not current_user.is_authenticated or not current_user.is_admin:
             return login_manager.unauthorized()
         return func(*args, **kwargs)
 
