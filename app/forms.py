@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import InputRequired, EqualTo
 
 
@@ -24,3 +24,7 @@ class ChangePasswordForm(FlaskForm):
         EqualTo('new_password2', 'Passwords have to match')
     ])
     new_password2 = PasswordField('New Password (Again)', validators=[InputRequired()])
+
+
+class UserFeedbackForm(FlaskForm):
+    content = TextAreaField(validators=[InputRequired()])

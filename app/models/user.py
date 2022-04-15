@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
     pwd_hash = db.Column(db.String(150), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
     solutions = db.relationship('UserSolution', backref='user', lazy=True)
+    challenge_feedback = db.relationship('UserFeedback', backref='user', lazy=True)
     
     def set_password(self, password):
         self.pwd_hash = generate_password_hash(password)

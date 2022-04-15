@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>User Feedback for <code>{{ challenge_obj.name }}</code></h1>
+    {% for feedback in user_feedback %}
+        <div class="section">
+            <p><strong>{{ feedback.user.username }} - {{ feedback.created_at }}</strong></p>
+            <p>{{ feedback.content }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
