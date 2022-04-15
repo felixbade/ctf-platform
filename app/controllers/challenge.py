@@ -4,8 +4,10 @@ from flask_login import current_user
 from functools import wraps
 
 from app import app, login_manager, db
+from app.forms import UserFeedbackForm
 from app.models.challenge import *
 from app.models.user_solution import create_user_solution
+from app.models.user_feedback import create_user_feedback
 
 
 def challenge_access_required(func):
@@ -74,13 +76,26 @@ def check_brief(name):
     else:
         return view_brief(name=name, incorrect_flag=attempted_flag)
 
-@app.route('/challenges/<name>/solved')
+
+@app.route('/challenges/<name>/solved', methods=['GET', 'POST'])
 @challenge_access_required
 def view_solved(name):
     challenge = Challenge.query.filter(Challenge.name == name).first()
     next_challenge = Challenge.query.filter(Challenge.order_num == challenge.order_num + 1).first()
     article = get_challenge_solved(name)
-    return render_template('challenge-solved.html', article=article, next_challenge=next_challenge)
+
+    form = UserFeedbackForm()
+    feedback_sent = False
+    if form.validate_on_submit():
+        create_user_feedback(current_user, challenge, form.content.data)
+        feedback_sent = True
+    return render_template(
+        'challenge-solved.html',
+        article=article,
+        next_challenge=next_challenge,
+        form=form,
+        feedback_sent=feedback_sent
+    )
 
 
 def get_next_non_completed_challenge():
