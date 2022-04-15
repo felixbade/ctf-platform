@@ -69,6 +69,11 @@ thead th {
     padding-top: 0.4em;
 }
 
+thead.light-header th {
+    background-color: inherit;
+    color: inherit;
+}
+
 tr {
     border-bottom: 1px solid hsla(0, 0%, 0%, 20%);
 }
