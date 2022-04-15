@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<a href="{{ url_for('admin_edit_welcome')}}">Edit welcome.md</a>
+
 <h1>All challenges</h1>
 <ul>
     {% for challenge in challenges %}
