@@ -91,6 +91,20 @@ def admin_challenge_feedback(name):
     return render_template('admin/user-feedback.html', user_feedback=user_feedback, challenge_obj=challenge_obj)
 
 
+@app.route('/admin/reorder-challenges')
+@admin_required
+def admin_edit_challenge_order():
+    challenges = Challenge.query.order_by(Challenge.order_num).all()
+    return render_template('admin/reorder-challenges.html', challenges=challenges)
+
+@app.route('/admin/reorder-challenges', methods=['POST'])
+@admin_required
+def admin_save_challenge_order():
+    form = request.form
+    return 'todo'
+    # return redirect(url_for('admin_view'))
+
+
 @app.route('/admin/edit-welcome')
 @admin_required
 def admin_edit_welcome():
