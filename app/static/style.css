@@ -25,6 +25,11 @@ h1, h2 {
     border-top: 1px solid hsla(0, 0%, 0%, 13%);
 }
 
+article {
+    padding: 1em;
+    background-color: hsl(110, 100%, 95%);
+}
+
 .challenge-uri-box {
     border: 1px solid hsla(0, 0%, 0%, 13%);
     padding: 0.3em 0.65em;
@@ -64,6 +69,11 @@ thead th {
     padding-top: 0.4em;
 }
 
+thead.light-header th {
+    background-color: inherit;
+    color: inherit;
+}
+
 tr {
     border-bottom: 1px solid hsla(0, 0%, 0%, 20%);
 }
@@ -85,5 +95,4 @@ th {
 
 header {
     border-bottom: 1px solid hsla(0, 0%, 0%, 13%);
-    margin-bottom: 1em;
 }
