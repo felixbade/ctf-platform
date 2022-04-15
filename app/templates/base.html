@@ -13,12 +13,12 @@
             <nav>
             (<a href="{{ url_for('view_frontpage') }}">home</a>)
             (<a href="{{ url_for('scoreboard') }}">scoreboard</a>)
+            {% if current_user.is_admin %}
+            (<a href="{{ url_for('admin_view')}}">admin&nbsp;panel</a>)
+            {% endif %}
             {% if current_user.is_authenticated %}
                 <div>
                 Logged in as {{ current_user.username }}
-                {% if current_user.is_admin %}
-                (<a href="{{ url_for('admin_view')}}">admin&nbsp;panel</a>)
-                {% endif %}
                 (<a href="{{ url_for('change_password') }}">change&nbsp;password</a>)
                 (<a href="{{ url_for('logout')}}">logout</a>)
                 </div>
