@@ -5,10 +5,10 @@ from app import db, app
 from app.models.user import User
 
 
-@app.cli.command('createsuperuser')
+@app.cli.command('create-admin-user')
 @click.option('--username', prompt=True)
 @click.password_option()
-def create_superuser(username, password):
+def create_admin_user(username, password):
     user = User(
         username=username,
         is_admin=True

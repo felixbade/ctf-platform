@@ -5,6 +5,7 @@
 - `. venv/bin/activate`
 - `pip install -r requirements`
 - add a secure secret key to `.env`
+- create an admin user with `flask create-admin-user`
 
 ## Running
 
