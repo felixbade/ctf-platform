@@ -19,7 +19,3 @@ Markdown(app)
 
 from app import controllers
 from app import cli_commands
-
-# make is_current_user_admin available in templates
-from app.controllers.admin import is_current_user_admin
-app.jinja_env.globals.update(is_current_user_admin=is_current_user_admin)
