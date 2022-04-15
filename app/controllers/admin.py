@@ -84,3 +84,14 @@ def admin_remove_challenge(name):
 def admin_save_remove_challenge(name):
     remove_challenge(name)
     return redirect(url_for('admin_view'))
+
+
+@app.route('/admin/edit-welcome')
+@admin_required
+def admin_edit_welcome():
+    return ''
+
+@app.route('/admin/edit-welcome', methods=['POST'])
+@admin_required
+def admin_save_welcome():
+    return ''
