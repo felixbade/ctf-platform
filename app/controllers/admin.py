@@ -28,7 +28,7 @@ def admin_required(func):
 @app.route('/admin')
 @admin_required
 def admin_view():
-    return render_template('admin/list-challenges.html', challenges=get_challenge_list())
+    return render_template('admin/main.html', challenges=get_challenge_list())
 
 
 @app.route('/admin/edit-challenge/<name>')
