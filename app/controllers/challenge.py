@@ -1,7 +1,7 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import asc
 from flask import render_template, request, redirect, url_for, abort
-from flask_login import current_user
+from flask_login import current_user, login_required
 from functools import wraps
 
 from app import app, login_manager, db
@@ -51,6 +51,21 @@ def challenge_access_required(func):
         return func(*args, **kwargs)
 
     return wrapper
+
+
+@app.route('/challenges')
+@login_required
+def challenges_list():
+    user_solutions = UserSolution.query.filter(
+        UserSolution.user_id == current_user.id
+    ).order_by(asc(UserSolution.solved_at)).all()
+    if not user_solutions:
+        next_challenge = Challenge.query.filter(Challenge.order_num == 0).first()
+    else:
+        order_num = user_solutions[-1].challenge.order_num
+        next_challenge = Challenge.query.filter(Challenge.order_num == order_num + 1).first()
+    return render_template('challenge-list.html', next_challenge=next_challenge, user_solutions=user_solutions)
+
 
 @app.route('/challenges/<name>')
 @challenge_access_required

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="section">
+        <h1>Your Challenges</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Challenge</th>
+                    <th>Solved At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for solution in user_solutions %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('view_brief', name=solution.challenge.name) }}">
+                                {{ solution.challenge.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ solution.solved_at | humanize_time }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% if next_challenge %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('view_brief', name=next_challenge.name) }}">{{ next_challenge.name }}</a>
+                        </td>
+                        <td class="error">Not solved yet</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
