@@ -100,9 +100,13 @@ def admin_edit_challenge_order():
 @app.route('/admin/reorder-challenges', methods=['POST'])
 @admin_required
 def admin_save_challenge_order():
-    form = request.form
-    return 'todo'
-    # return redirect(url_for('admin_view'))
+    for (key, value) in request.form.items():
+        if key.startswith('order-'):
+            name = key[6:]
+            challenge = Challenge.query.filter(Challenge.name == name).first()
+            challenge.order_num = value
+            db.session.commit()
+    return redirect(url_for('admin_view'))
 
 
 @app.route('/admin/edit-welcome')

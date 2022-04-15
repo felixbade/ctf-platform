@@ -16,7 +16,7 @@
         {% for challenge in challenges %}
         <tr>
             <td>{{ challenge.name }}</td>
-            <td><input type="number" name="{{ challenge.name }}" value="{{ challenge.order_num }}"></td>
+            <td><input type="number" name="order-{{ challenge.name }}" value="{{ challenge.order_num }}"></td>
         </tr>
         {% endfor %}
     </table>
