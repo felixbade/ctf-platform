@@ -18,6 +18,7 @@ from flaskext.markdown import Markdown
 Markdown(app)
 
 from app import controllers
+from app import cli_commands
 
 # make is_current_user_admin available in templates
 from app.controllers.admin import is_current_user_admin
