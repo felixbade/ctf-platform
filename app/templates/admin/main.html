@@ -5,14 +5,22 @@
 <a href="{{ url_for('admin_edit_welcome')}}">Edit welcome.md</a>
 
 <h1>All challenges</h1>
-<ul>
+<table>
+    <thead>
+        <th>Name</th>
+        <th>Edit</th>
+        <th>Remove</th>
+        <th>Feedback</th>
+    </thead>
     {% for challenge in challenges %}
-    <li><a href="{{ url_for('view_brief', name=challenge) }}">{{ challenge }}</a>
-        (<a href="{{ url_for('admin_edit_challenge', name=challenge) }}">edit</a>)
-        (<a href="{{ url_for('admin_remove_challenge', name=challenge) }}">remove</a>)
-        (<a href="{{ url_for('admin_challenge_feedback', name=challenge) }}">feedback</a>)</li>
+    <tr>
+        <td><a href="{{ url_for('view_brief', name=challenge) }}">{{ challenge }}</a></td>
+        <td><a href="{{ url_for('admin_edit_challenge', name=challenge) }}">edit</a></td>
+        <td><a href="{{ url_for('admin_remove_challenge', name=challenge) }}">remove</a></td>
+        <td><a href="{{ url_for('admin_challenge_feedback', name=challenge) }}">feedback</a></td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 
 <a href="{{ url_for('admin_new_challenge') }}">New challenge</a>
 
