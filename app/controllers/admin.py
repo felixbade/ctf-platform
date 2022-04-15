@@ -43,9 +43,6 @@ def admin_edit_challenge(name):
 @admin_required
 def admin_save_challenge(name):
     form = request.form
-    challenge_obj = Challenge.query.filter(Challenge.name == name).first()
-    challenge_obj.order_num = form.get('order_num', 0)
-    db.session.commit()
     save_challenge_brief(name, form.get('brief', '').replace('\r\n', '\n'))
     save_challenge_solved(name, form.get('solved', '').replace('\r\n', '\n'))
     save_challenge_uri(name, form.get('uri', ''))
@@ -89,6 +86,24 @@ def admin_challenge_feedback(name):
         abort(404)
     user_feedback = UserFeedback.query.filter(UserFeedback.challenge_id == challenge_obj.id).all()
     return render_template('admin/user-feedback.html', user_feedback=user_feedback, challenge_obj=challenge_obj)
+
+
+@app.route('/admin/reorder-challenges')
+@admin_required
+def admin_edit_challenge_order():
+    challenges = Challenge.query.order_by(Challenge.order_num).all()
+    return render_template('admin/reorder-challenges.html', challenges=challenges)
+
+@app.route('/admin/reorder-challenges', methods=['POST'])
+@admin_required
+def admin_save_challenge_order():
+    for (key, value) in request.form.items():
+        if key.startswith('order-'):
+            name = key[6:]
+            challenge = Challenge.query.filter(Challenge.name == name).first()
+            challenge.order_num = value
+            db.session.commit()
+    return redirect(url_for('admin_view'))
 
 
 @app.route('/admin/edit-welcome')

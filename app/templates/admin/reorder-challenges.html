@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Edit challenge order</h1>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+    <table>
+        <thead>
+            <th>Name</th>
+            <th>Order number</th>
+        </thead>
+
+        {% for challenge in challenges %}
+        <tr>
+            <td>{{ challenge.name }}</td>
+            <td><input type="number" name="order-{{ challenge.name }}" value="{{ challenge.order_num }}"></td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <input type="submit" value="Save">
+</form>
+
+
+{% endblock %}
