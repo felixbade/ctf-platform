@@ -11,7 +11,7 @@ def is_current_user_admin():
     # A quick and dirty implementation.
     # 'admin' user should be registered by organizers before a player does.
     # The logic should probably be moved to controllers/auth.py or models/user.py.
-    return current_user.is_authenticated and current_user.username == 'admin'
+    return current_user.is_admin
 
 
 def admin_required(func):
