@@ -8,18 +8,11 @@ from app.models.challenge import *
 from app.models.puzzle import get_welcome, save_welcome
 
 
-def is_current_user_admin():
-    # A quick and dirty implementation.
-    # 'admin' user should be registered by organizers before a player does.
-    # The logic should probably be moved to controllers/auth.py or models/user.py.
-    return current_user.is_admin
-
-
 def admin_required(func):
     """Decorator for checking that the user is an admin"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if not is_current_user_admin():
+        if not current_user.is_admin:
             return login_manager.unauthorized()
         return func(*args, **kwargs)
 
