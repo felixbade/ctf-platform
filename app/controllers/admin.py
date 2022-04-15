@@ -5,6 +5,7 @@ from flask_login import current_user
 
 from app import app, login_manager, db
 from app.models.challenge import *
+from app.models.puzzle import get_welcome, save_welcome
 
 
 def is_current_user_admin():
@@ -89,9 +90,12 @@ def admin_save_remove_challenge(name):
 @app.route('/admin/edit-welcome')
 @admin_required
 def admin_edit_welcome():
-    return ''
+    welcome = get_welcome()
+    return render_template('admin/edit-welcome.html', welcome=welcome)
 
 @app.route('/admin/edit-welcome', methods=['POST'])
 @admin_required
 def admin_save_welcome():
-    return ''
+    form = request.form
+    save_welcome(form.get('welcome', '').replace('\r\n', '\n'))
+    return redirect(url_for('admin_view'))

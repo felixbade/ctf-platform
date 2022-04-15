@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Edit challenge <code>{{ name }}</code></h1>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+    <h2>Welcome.md</h2>
+    <textarea name="welcome">{{ welcome }}</textarea>
+
+    <br><br>
+    <input type="submit" value="Save">
+</form>
+
+
+{% endblock %}
