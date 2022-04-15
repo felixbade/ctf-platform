@@ -16,7 +16,7 @@
                     <th>{{ loop.index }}</th>
                     <td>{{ user.username }}</td>
                     <td>{{ user.num_of_solutions }}</td>
-                    <td>{{ user.latest_solution_time }}</td>
+                    <td>{{ user.latest_solution_time | humanize_time }}</td>
                 </tr>
             {% endfor %}
         </tbody>
