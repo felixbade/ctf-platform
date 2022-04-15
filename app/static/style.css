@@ -16,7 +16,7 @@
         --color-border-1: hsla(0, 0%, 100%, 20%);
         --color-border-2: hsla(0, 0%, 100%, 30%);
         --color-fg: hsl(0, 0%, 90%);
-        --color-bg: hsl(0, 0%, 10%);
+        --color-bg: hsl(220, 20%, 8%);
     }
 }
 
