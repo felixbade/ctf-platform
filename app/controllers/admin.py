@@ -1,10 +1,11 @@
 from functools import wraps
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, abort
 from flask_login import current_user
 
-from app import app, login_manager, db
+from app import app, login_manager
 from app.models.challenge import *
+from app.models.user_feedback import UserFeedback
 
 
 def is_current_user_admin():
@@ -84,3 +85,13 @@ def admin_remove_challenge(name):
 def admin_save_remove_challenge(name):
     remove_challenge(name)
     return redirect(url_for('admin_view'))
+
+
+@app.route('/admin/challenge-feedback/<name>')
+@admin_required
+def admin_challenge_feedback(name):
+    challenge_obj = Challenge.query.filter(Challenge.name == name).first()
+    if not challenge_obj:
+        abort(404)
+    user_feedback = UserFeedback.query.filter(UserFeedback.challenge_id == challenge_obj.id).all()
+    return render_template('admin/user-feedback.html', user_feedback=user_feedback, challenge_obj=challenge_obj)
