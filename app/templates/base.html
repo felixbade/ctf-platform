@@ -10,12 +10,22 @@
     <body>
         <div class="container">
             <header>
+            <nav>
+            <a href="{{ url_for('view_frontpage') }}">Home</a>
+            &middot;
+            <a href="{{ url_for('scoreboard') }}">Scoreboard</a>
+            {% if current_user.is_admin %}
+            &middot;
+            <a href="{{ url_for('admin_view')}}">Admin&nbsp;panel</a>
+            {% endif %}
+            </nav>
+
             {% if current_user.is_authenticated %}
+                <div>
                 Logged in as {{ current_user.username }}
-                (<a href="{{ url_for('logout')}}">logout</a>)
-                {% if current_user.is_admin %}
-                (<a href="{{ url_for('admin_view')}}">admin panel</a>)
-                {% endif %}
+                <span class="small">(<a href="{{ url_for('change_password') }}">change&nbsp;password</a>)</span>
+                <span class="small">(<a href="{{ url_for('logout')}}">logout</a>)</span>
+                </div>
             {% endif %}
             {% with messages = get_flashed_messages(with_categories=True) %}
                 {% if messages %}
