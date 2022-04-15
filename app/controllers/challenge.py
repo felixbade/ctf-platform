@@ -89,6 +89,7 @@ def view_solved(name):
     user_solutions = UserSolution.query.filter(
         UserSolution.challenge_id == challenge.id
     ).order_by(asc(UserSolution.solved_at)).all()
+    user_solutions = [s for s in user_solutions if not s.user.is_admin]
     next_challenge = Challenge.query.filter(Challenge.order_num == challenge.order_num + 1).first()
     article = get_challenge_solved(name)
 
