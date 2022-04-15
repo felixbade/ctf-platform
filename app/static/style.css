@@ -120,4 +120,10 @@ th {
 
 header {
     border-bottom: 1px solid var(--color-border-1);
+    display: flex;
+    justify-content: space-between;
+}
+
+.small {
+    font-size: 70%;
 }
