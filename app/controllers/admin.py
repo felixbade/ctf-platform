@@ -1,8 +1,10 @@
 from functools import wraps
 
-from app import login_manager, db
-from app.controllers.challenge import *
-from app.models.challenge import Challenge
+from flask import render_template, request, redirect, url_for
+from flask_login import current_user
+
+from app import app, login_manager, db
+from app.models.challenge import *
 
 
 def is_current_user_admin():
@@ -38,7 +40,7 @@ def admin_edit_challenge(name):
             uri=get_challenge_uri(name),
             flag=get_challenge_flag(name),
             solved=get_challenge_solved(name),
-            challenge_obj=Challenge.query.filter(Challenge.title == name).first()
+            challenge_obj=Challenge.query.filter(Challenge.name == name).first()
     )
 
 
@@ -46,7 +48,7 @@ def admin_edit_challenge(name):
 @admin_required
 def admin_save_challenge(name):
     form = request.form
-    challenge_obj = Challenge.query.filter(Challenge.title == name).first()
+    challenge_obj = Challenge.query.filter(Challenge.name == name).first()
     challenge_obj.order_num = form.get('order_num', 0)
     db.session.commit()
     save_challenge_brief(name, form.get('brief', '').replace('\r\n', '\n'))
@@ -67,12 +69,6 @@ def admin_new_challenge():
 @admin_required
 def admin_save_new_challenge():
     name = request.form.get('name')
-    last_challenge = Challenge.query.order_by(-Challenge.order_num).first()
-    order_num = last_challenge.order_num + 1 if last_challenge else 0
-
-    challenge = Challenge(title=name, order_num=order_num)
-    db.session.add(challenge)
-    db.session.commit()
     add_challenge(name)
     return redirect(url_for('admin_edit_challenge', name=name))
 
@@ -86,7 +82,5 @@ def admin_remove_challenge(name):
 @app.route('/admin/remove-challenge/<name>', methods=['POST'])
 @admin_required
 def admin_save_remove_challenge(name):
-    Challenge.query.filter(Challenge.title == name).delete()
-    db.session.commit()
     remove_challenge(name)
     return redirect(url_for('admin_view'))
