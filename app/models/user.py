@@ -6,6 +6,19 @@ from app import db
 from app.models.user_solution import UserSolution
 
 
+def get_user_ranking(hide_users_with_zero_score=True):
+    """
+    Gets all non-admin users and sorts the according to
+    the number of solutions and the time of the last solution for each user
+    """
+    users = User.query.filter(User.is_admin != True).all()
+    if hide_users_with_zero_score:
+        users = [u for u in users if u.num_of_solutions != 0]
+
+    users.sort(key=lambda x: (-x.num_of_solutions, x.latest_solution_time))
+    return users
+
+
 class User(UserMixin, db.Model):
     __tablename__ = "user"
 
