@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app import db, app
 from app.models.user import User
-
+from app.telegram import TG
 
 @app.cli.command('create-admin-user')
 @click.option('--username', prompt=True)
@@ -33,3 +33,8 @@ def delete_user(username):
         db.session.delete(user)
         db.session.commit()
         click.echo(f"User '{username}' deleted successfully!")
+
+@app.cli.command('test-telegram')
+@click.argument('content')
+def send_tg_notification(content):
+    TG.send_message(content)
