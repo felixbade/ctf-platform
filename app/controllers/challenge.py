@@ -91,6 +91,9 @@ def check_brief(name):
         challenge = Challenge.query.filter(Challenge.name == name).first()
         try:
             create_user_solution(current_user, challenge)
+            username = escapeMarkdown(current_user.username)
+            c_name = escapeMarkdown(challenge.name)
+            send_message(f'{username} just solved {c_name}')
         except IntegrityError:
             db.session.rollback()
         return redirect(url_for('view_solved', name=name))
