@@ -21,3 +21,15 @@ def create_admin_user(username, password):
     except IntegrityError:
         db.session.rollback()
         click.echo('User with that username already exists!')
+
+
+@app.cli.command('delete-user')
+@click.argument('username')
+def delete_user(username):
+    user = User.query.filter(User.username == username).first()
+    if not user:
+        click.echo('User with that username does not exist!')
+    else:
+        db.session.delete(user)
+        db.session.commit()
+        click.echo(f"User '{username}' deleted successfully!")
