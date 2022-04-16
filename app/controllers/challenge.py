@@ -87,7 +87,7 @@ def check_brief(name):
     attempted_flag = request.form.get('flag')
     correct_flag = get_challenge_flag(name)
 
-    if attempted_flag in correct_flag.split(','):
+    if attempted_flag in correct_flag.split(';'):
         challenge = Challenge.query.filter(Challenge.name == name).first()
         try:
             create_user_solution(current_user, challenge)
