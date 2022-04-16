@@ -9,7 +9,7 @@ from app.forms import UserFeedbackForm
 from app.models.challenge import *
 from app.models.user_solution import *
 from app.models.user_feedback import create_user_feedback
-from app.telegram import send_message
+from app.telegram import send_message, escapeMarkdown
 
 def challenge_access_required(func):
     """
@@ -114,7 +114,10 @@ def view_solved(name):
     if form.validate_on_submit():
         create_user_feedback(current_user, challenge, form.content.data)
         url = f'{request.headers.get("Origin")}{url_for("admin_challenge_feedback", name=challenge.name)}'
-        send_message(f'{current_user.username} [sent feedback]({url}) for {challenge.name}:\n{form.content.data}')
+        username = escapeMarkdown(current_user.username)
+        c_name = escapeMarkdown(challenge.name)
+        message = escapeMarkdown(form.content.data)
+        send_message(f'{username} [sent feedback]({url}) for {c_name}:\n{message}')
         feedback_sent = True
     return render_template(
         'challenge-solved.html',
