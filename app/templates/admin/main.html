@@ -20,7 +20,7 @@
     </thead>
     {% for challenge in challenges %}
     <tr>
-        <td><a href="{{ url_for('view_brief', name=challenge) }}">{{ challenge }}</a></td>
+        <td><a href="{{ url_for('view_brief', name=challenge.name) }}">{{ challenge.name }}</a></td>
         <td><a href="{{ url_for('admin_edit_challenge', name=challenge) }}">edit</a></td>
         <td><a href="{{ url_for('admin_remove_challenge', name=challenge) }}">remove</a></td>
         <td><a href="{{ url_for('admin_challenge_feedback', name=challenge) }}">feedback</a></td>

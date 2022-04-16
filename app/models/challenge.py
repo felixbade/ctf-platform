@@ -19,8 +19,7 @@ class Challenge(db.Model):
 
 
 def get_challenge_list():
-    challenges = Challenge.query.order_by(Challenge.order_num).all()
-    return [c.name for c in challenges]
+    return Challenge.query.order_by(Challenge.order_num).all()
 
 def get_challenge_file(challenge, filename):
     return open(os.path.join('puzzle', 'challenges', challenge, filename)).read()
@@ -59,7 +58,7 @@ def add_challenge(name):
     # Might be better off in a database. We could add folder import/export to support the old system.
     # Stuff like multipe challenges with the same name, empty names, slashes in names, and missing
     # line breaks can cause problems.
-    if name in get_challenge_list():
+    if name in [c.name for c in get_challenge_list()]:
         return
     if not name:
         return
