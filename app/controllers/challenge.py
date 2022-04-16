@@ -61,6 +61,7 @@ def challenges_list():
     ).order_by(asc(UserSolution.solved_at)).all()
     if not user_solutions:
         next_challenge = Challenge.query.filter(Challenge.order_num == 0).first()
+        return redirect(url_for('view_brief', name=next_challenge.name))
     else:
         order_num = user_solutions[-1].challenge.order_num
         next_challenge = Challenge.query.filter(Challenge.order_num == order_num + 1).first()
