@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>User Feedback for <code>{{ challenge_obj.name }}</code></h1>
-    {% for feedback in user_feedback %}
+    {% for feedback in challenge_obj.feedback %}
         <div class="section">
             <p><strong>{{ feedback.user.username }} - {{ feedback.created_at | humanize_time }}</strong></p>
             <p>{{ feedback.content }}</p>

@@ -92,8 +92,7 @@ def admin_challenge_feedback(name):
     challenge_obj = Challenge.query.filter(Challenge.name == name).first()
     if not challenge_obj:
         abort(404)
-    user_feedback = UserFeedback.query.filter(UserFeedback.challenge_id == challenge_obj.id).all()
-    return render_template('admin/user-feedback.html', user_feedback=user_feedback, challenge_obj=challenge_obj)
+    return render_template('admin/user-feedback.html', challenge_obj=challenge_obj)
 
 
 @app.route('/admin/reorder-challenges')
