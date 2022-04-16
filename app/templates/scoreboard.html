@@ -1,24 +1,6 @@
 {% extends 'base.html' %}
+{% from '_macros.html' import render_scoreboard %}
 
 {% block content %}
-    <table>
-        <thead>
-            <tr>
-                <th>Pos.</th>
-                <th>User</th>
-                <th>Score</th>
-                <th>Latest Solution</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-                <tr>
-                    <th>{{ loop.index }}</th>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.num_of_solutions }}</td>
-                    <td>{{ user.latest_solution_time | humanize_time }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    {{ render_scoreboard(users) }}
 {% endblock %}
