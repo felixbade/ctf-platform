@@ -13,6 +13,7 @@
 
 <table>
     <thead>
+        <th>#</th>
         <th>Name</th>
         <th>Edit</th>
         <th>Remove</th>
@@ -20,6 +21,7 @@
     </thead>
     {% for challenge in challenges %}
     <tr>
+        <td>{{ challenge.order_num }}</td>
         <td><a href="{{ url_for('view_brief', name=challenge.name) }}">{{ challenge.name }}</a></td>
         <td><a href="{{ url_for('admin_edit_challenge', name=challenge) }}">edit</a></td>
         <td><a href="{{ url_for('admin_remove_challenge', name=challenge) }}">remove</a></td>
