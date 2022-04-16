@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import render_scoreboard %}
+
+{% block content %}
+    {{ render_scoreboard(users) }}
+{% endblock %}

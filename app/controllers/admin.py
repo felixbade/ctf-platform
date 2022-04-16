@@ -4,6 +4,7 @@ from flask import render_template, request, redirect, url_for, abort
 from flask_login import current_user
 
 from app import app, login_manager
+from app.models.user import get_user_ranking
 from app.models.challenge import *
 from app.models.user_feedback import UserFeedback
 from app.models.puzzle import get_welcome, save_welcome
@@ -24,6 +25,13 @@ def admin_required(func):
 @admin_required
 def admin_view():
     return render_template('admin/main.html', challenges=get_challenge_list())
+
+
+@app.route('/admin/all-users')
+@admin_required
+def admin_all_users():
+    users = get_user_ranking(hide_users_with_zero_score=False)
+    return render_template('admin/users.html', users=users)
 
 
 @app.route('/admin/edit-challenge/<name>')
