@@ -113,7 +113,7 @@ def view_solved(name):
     feedback_sent = False
     if form.validate_on_submit():
         create_user_feedback(current_user, challenge, form.content.data)
-        send_message(f'{current_user} send feedback for {challenge}:\n{form.content.data}')
+        send_message(f'{current_user.username} send feedback for {challenge.name}:\n{form.content.data}')
         feedback_sent = True
     return render_template(
         'challenge-solved.html',
