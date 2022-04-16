@@ -1,12 +1,11 @@
 from flask import render_template
 
 from app import app
-from app.models.user import User
+from app.models.user import get_user_ranking
 
 
 @app.route('/scoreboard')
 def scoreboard():
-    users = User.query.filter(User.is_admin != True).all()
-    users.sort(key=lambda x: (-x.num_of_solutions, x.latest_solution_time))
+    users = get_user_ranking()
 
     return render_template('scoreboard.html', users=users)
